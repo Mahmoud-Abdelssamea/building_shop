@@ -66,9 +66,9 @@
     {
       "name": "get single role",
       "url": {
-        "u": "/api/role/single/roleId",
+        "u": "/api/role/single/employeeId",
         "method": "get",
-        "params": ["roleId"],
+        "params": ["employeeId"],
         "query": []
       }
     },
@@ -84,9 +84,9 @@
     {
       "name": "delete single role",
       "url": {
-        "u": "/api/role/delete/roleId",
+        "u": "/api/role/delete/employeeId",
         "method": "delete",
-        "params": ["roleId"],
+        "params": ["employeeId"],
         "query": []
       }
     },
@@ -95,7 +95,7 @@
       "url": {
         "u": "/api/role/delete",
         "method": "delete",
-        "params": ["roleId"],
+        "params": [],
         "query": []
       }
     },
