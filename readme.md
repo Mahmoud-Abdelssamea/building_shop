@@ -1,5 +1,5 @@
 # Project: building shop
-###### this collection has Request for \[API\] (http://localhost:3000)  
+###### this collection has Request for \[API\]  
 this is \[API\] for website for constructure company
 
 as the super admin can add the role for every employee and depend on this role the user can accss to the url.
