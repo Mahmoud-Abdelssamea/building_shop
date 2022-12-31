@@ -7,7 +7,7 @@ const userSchema = mongoose.Schema(
       type: String,
       trim: true,
       lowercase: true,
-      minLength: 5,
+      minLength: 3,
       maxLength: 20,
       required: true,
     },
@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema(
       type: String,
       trim: true,
       lowercase: true,
-      minLength: 5,
+      minLength: 3,
       maxLength: 20,
       required: true,
     },
@@ -25,6 +25,7 @@ const userSchema = mongoose.Schema(
     },
     role: {
       type: mongoose.Schema.Types.ObjectId,
+      // default: "",
     },
     email: {
       type: String,
@@ -50,7 +51,7 @@ const userSchema = mongoose.Schema(
     },
     tokens: [
       {
-        token: { type: String, required: true },
+        token: { type: String },
       },
     ],
   },

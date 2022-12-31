@@ -1,0 +1,257 @@
+{
+  "roles": [
+    {
+      "name": "add new user",
+      "url": {
+        "u": "/api/user/add",
+        "method": "post",
+        "params": [],
+        "query": []
+      }
+    },
+    {
+      "name": "delete user",
+      "url": {
+        "u": "/api/user/delete/id",
+        "method": "delete",
+        "params": ["id"],
+        "query": []
+      }
+    },
+    {
+      "name": "update user",
+      "url": {
+        "u": "/api/user/update/id",
+        "method": "patch",
+        "params": ["id"],
+        "query": []
+      }
+    },
+    {
+      "name": "update user status",
+      "url": {
+        "u": "/api/user/update/status/id",
+        "method": "patch",
+        "params": ["id"],
+        "query": []
+      }
+    },
+    {
+      "name": "update user status",
+      "url": {
+        "u": "/api/user/login",
+        "method": "post",
+        "params": [],
+        "query": []
+      }
+    },
+    {
+      "name": "add new Role",
+      "url": {
+        "u": "/api/role/add/employeeId",
+        "method": "post",
+        "params": ["employeeId"],
+        "query": []
+      }
+    },
+    {
+      "name": "get all roles",
+      "url": {
+        "u": "/api/role/all",
+        "method": "get",
+        "params": [],
+        "query": []
+      }
+    },
+    {
+      "name": "get single role",
+      "url": {
+        "u": "/api/role/single/roleId",
+        "method": "get",
+        "params": ["roleId"],
+        "query": []
+      }
+    },
+    {
+      "name": "update role",
+      "url": {
+        "u": "/api/role/update/employeeId",
+        "method": "put",
+        "params": ["employeeId"],
+        "query": []
+      }
+    },
+    {
+      "name": "delete single role",
+      "url": {
+        "u": "/api/role/delete/roleId",
+        "method": "delete",
+        "params": ["roleId"],
+        "query": []
+      }
+    },
+    {
+      "name": "delete all roles",
+      "url": {
+        "u": "/api/role/delete",
+        "method": "delete",
+        "params": ["roleId"],
+        "query": []
+      }
+    },
+
+    {
+      "name": "add new project",
+      "url": {
+        "u": "/api/project/add",
+        "method": "post",
+        "params": [],
+        "query": []
+      }
+    },
+    {
+      "name": "get all projects",
+      "url": {
+        "u": "/api/project/all",
+        "method": "get",
+        "params": [],
+        "query": []
+      }
+    },
+    {
+      "name": "get single project",
+      "url": {
+        "u": "/api/role/single/projectId",
+        "method": "get",
+        "params": ["projectId"],
+        "query": []
+      }
+    },
+    {
+      "name": "update project",
+      "url": {
+        "u": "/api/project/update/projectId",
+        "method": "put",
+        "params": ["projectId"],
+        "query": []
+      }
+    },
+    {
+      "name": "delete single project",
+      "url": {
+        "u": "/api/project/delete/projectId",
+        "method": "delete",
+        "params": ["projectId"],
+        "query": []
+      }
+    },
+    {
+      "name": "add new building",
+      "url": {
+        "u": "/api/building/projectId/add",
+        "method": "post",
+        "params": ["projectId"],
+        "query": []
+      }
+    },
+    {
+      "name": "get all buildings",
+      "url": {
+        "u": "/api/building/all",
+        "method": "get",
+        "params": [],
+        "query": []
+      }
+    },
+    {
+      "name": "get single building",
+      "url": {
+        "u": "/api/building/single/buildingId",
+        "method": "get",
+        "params": ["buildingId"],
+        "query": []
+      }
+    },
+    {
+      "name": "update building",
+      "url": {
+        "u": "/api/building/update/buildingId",
+        "method": "put",
+        "params": ["buildingId"],
+        "query": []
+      }
+    },
+    {
+      "name": "delete single building",
+      "url": {
+        "u": "/api/building/delete/buildingId",
+        "method": "delete",
+        "params": ["buildingId"],
+        "query": []
+      }
+    },
+    {
+      "name": "get single unit",
+      "url": {
+        "u": "/api/building/buildingId/unit/unitAddress",
+        "method": "get",
+        "params": ["buildingId"],
+        "query": ["unitAddress"]
+      }
+    },
+    {
+      "name": "update single unit",
+      "url": {
+        "u": "/api/building/buildingId/unit/unitAddress",
+        "method": "put",
+        "params": ["buildingId"],
+        "query": ["unitAddress"]
+      }
+    },
+    {
+      "name": "selling a unit",
+      "url": {
+        "u": "/api/sell/buildingId/add/unitAddress",
+        "method": "post",
+        "params": ["buildingId"],
+        "query": ["unitAddress"]
+      }
+    },
+    {
+      "name": "cancel selling a unit",
+      "url": {
+        "u": "/api/sell/delete/buildingId/unitAddress",
+        "method": "delete",
+        "params": ["buildingId"],
+        "query": ["unitAddress"]
+      }
+    },
+    {
+      "name": "pay new invoice",
+      "url": {
+        "u": "/api/sell/payment/buildingId/unitAddress",
+        "method": "put",
+        "params": ["buildingId"],
+        "query": ["unitAddress"]
+      }
+    },
+    {
+      "name": "show payment for a unit",
+      "url": {
+        "u": "/api/sell/payment/buildingId/unitAddress",
+        "method": "get",
+        "params": ["buildingId"],
+        "query": ["unitAddress"]
+      }
+    },
+    {
+      "name": "download invoice for a unit",
+      "url": {
+        "u": "/api/sell/download/buildingId/unitAddress",
+        "method": "post",
+        "params": ["buildingId"],
+        "query": ["unitAddress"]
+      }
+    }
+  ]
+}

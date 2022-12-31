@@ -1,5 +1,7 @@
+const fs = require("fs");
 const roleModel = require("../model/rolesModel");
 const MyHelper = require("../utils/helper");
+const userModel = require("../model/userModel");
 
 class Role {
   //
@@ -7,25 +9,35 @@ class Role {
   //
   static createNewRole = async (req, res) => {
     try {
-      const { userType, links } = req.body;
-      const userId = req.user._id;
+      const links = req.body;
+      const { employeeId } = req.params;
+
+      const checkUserHasRole = await userModel.findOne({ _id: employeeId });
+
+      if (checkUserHasRole.role)
+        throw new Error("this user already has role you can't create new one ");
 
       const data = links.map((element) => {
         return {
           url: {
             u: element.u,
             method: element.method,
+            params: element.params || [],
+            query: element.query || [],
           },
         };
       });
-
+      //   creat newe role
       const newRole = await roleModel.create({
-        userId,
-        userType,
         urls: data,
       });
-
       if (!newRole) throw new Error("failed to create new Role");
+
+      //   add role Id to user
+      await userModel.updateOne(
+        { _id: employeeId },
+        { $set: { role: newRole._id, status: true } }
+      );
       MyHelper.resHelper(res, 200, true, newRole, "new Role added");
     } catch (error) {
       MyHelper.resHelper(res, 500, false, error, error.message);
@@ -37,40 +49,69 @@ class Role {
   //
   static updateRole = async (req, res) => {
     try {
-      const { userType, links } = req.body;
+      const links = req.body;
+      const { employeeId } = req.params;
+
+      const employeeData = await userModel.findOne({ _id: employeeId });
+
+      if (!employeeData) throw new Error("this employee not available");
+
+      if (!employeeData.role)
+        throw new Error("this employee doesn't have role");
+
       const data = links.map((element) => {
         return {
           url: {
             u: element.u,
             method: element.method,
+            params: element.params || [],
+            query: element.query || [],
           },
         };
       });
 
-      const updatedRole = await roleModel.findByIdAndUpdate(
-        { _id: req.params.roleId },
+      let updatedRole = await roleModel.findByIdAndUpdate(
+        { _id: employeeData.role },
         {
-          userType,
           urls: data,
         }
       );
 
-      if (!updatedRole) throw new Error("failed to create new Role");
-      MyHelper.resHelper(res, 200, true, newRole, "new Role added");
+      if (!updatedRole)
+        throw new Error("this employee doesn't have role to update");
+
+      updatedRole = await roleModel.findOne({ _id: employeeData.role });
+
+      MyHelper.resHelper(res, 200, true, updatedRole, "role updated");
     } catch (error) {
       MyHelper.resHelper(res, 500, false, error, error.message);
     }
   };
 
   //
-  //---------------------------------- delete single----------------------------//
+  //---------------------------------- delete single Role----------------------------//
   //
   static deleteRole = async (req, res) => {
     try {
+      const { employeeId } = req.params;
+
+      const employeeData = await userModel.findOne({ _id: employeeId });
+
+      if (!employeeData) throw new Error("this employee not available");
+
+      if (!employeeData.role)
+        throw new Error("this employee doesn't have role");
+
       const singleRole = await roleModel.findByIdAndDelete({
-        _id: req.params.roleId,
+        _id: employeeData.role,
       });
-      if (!singleRole) throw new Error("this role not available");
+      if (!singleRole) throw new Error("this employee doesn't have role");
+
+      await userModel.updateOne(
+        { _id: employeeId },
+        { role: null, status: false }
+      );
+
       MyHelper.resHelper(res, 200, true, singleRole, "Role deleted");
     } catch (error) {
       MyHelper.resHelper(res, 500, false, error, error.message);
@@ -78,15 +119,15 @@ class Role {
   };
 
   //
-  //---------------------------------- delete single----------------------------//
+  //---------------------------------- delete all roles----------------------------//
   //
-  static deleteRole = async (req, res) => {
+  static deleteAllRoles = async (req, res) => {
     try {
-      const singleRole = await roleModel.findByIdAndDelete({
-        _id: req.params.roleId,
-      });
-      if (!singleRole) throw new Error("this role not available");
-      MyHelper.resHelper(res, 200, true, singleRole, "Role deleted");
+      const allRole = await roleModel.deleteMany({});
+
+      if (allRole.deletedCount == 0)
+        throw new Error("there's no roles to delete");
+      MyHelper.resHelper(res, 200, true, allRole, "all Roles deleted");
     } catch (error) {
       MyHelper.resHelper(res, 500, false, error, error.message);
     }
@@ -110,9 +151,28 @@ class Role {
   //
   static getSingleRole = async (req, res) => {
     try {
-      const singleRole = await roleModel.find({ _id: req.params.roleId });
-      if (!singleRole) throw new Error("this role not available");
+      const employeeData = await userModel.findOne({
+        _id: req.params.employeeId,
+      });
+      if (!employeeData) throw new Error("this employee not available");
+
+      const singleRole = await roleModel.findOne({
+        _id: employeeData.role,
+      });
+
+      if (!singleRole) throw new Error("this employee doesn't have role");
+
       MyHelper.resHelper(res, 200, true, singleRole, "single role");
+    } catch (error) {
+      MyHelper.resHelper(res, 500, false, error, error.message);
+    }
+  };
+
+  static showAllRoles = async (req, res) => {
+    try {
+      const readfile = fs.readFileSync("utils/roles.json");
+      const roles = JSON.parse(readfile);
+      MyHelper.resHelper(res, 200, true, roles, "show list of roles");
     } catch (error) {
       MyHelper.resHelper(res, 500, false, error, error.message);
     }

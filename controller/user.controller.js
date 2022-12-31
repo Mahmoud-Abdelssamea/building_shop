@@ -23,6 +23,10 @@ class User {
         "mew User added successfully"
       );
     } catch (error) {
+      if (error.code == 11000) {
+        error["message"] =
+          Object.keys(error.keyValue)[0] + " is already exists";
+      }
       MyHelper.resHelper(res, 500, false, error, error.message);
     }
   };
@@ -69,6 +73,10 @@ class User {
         "User updated successfully"
       );
     } catch (error) {
+      if (error.code == 11000) {
+        error["message"] =
+          Object.keys(error.keyValue)[0] + " is already exists";
+      }
       MyHelper.resHelper(res, 500, false, error, error.message);
     }
   };
@@ -107,7 +115,7 @@ class User {
       // get the data by email
       const { email, password } = req.body;
       const userData = await userModel.findOne({ email });
-      if (!userData) throw new Error("invalid email");
+      if (!userData) throw new Error("this email not available");
 
       // check password is correct
       const validatePassword = Crypt.compareHashedPassword(
