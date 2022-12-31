@@ -323,7 +323,10 @@ class Payment {
         throw new Error("this invoice not available");
 
       let file = path.resolve(`invoices/${requiredInvoice[0]}.pdf`);
-      res.sendFile(file);
+
+      const response = res.sendFile(file);
+
+      if (!response) throw new Error("this invoice not available in server");
     } catch (error) {
       MyHelper.resHelper(res, 500, false, error, error.message);
     }
