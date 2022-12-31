@@ -14,6 +14,8 @@ class Role {
 
       const checkUserHasRole = await userModel.findOne({ _id: employeeId });
 
+      if (!checkUserHasRole) throw new Error("this employee not available");
+
       if (checkUserHasRole.role)
         throw new Error("this user already has role you can't create new one ");
 
