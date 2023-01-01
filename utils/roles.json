@@ -193,64 +193,64 @@
     {
       "name": "get single unit",
       "url": {
-        "u": "/api/building/buildingId/unit/unitAddress",
+        "u": "/api/building/buildingId/unit",
         "method": "get",
         "params": ["buildingId"],
-        "query": ["unitAddress"]
+        "query": ["address"]
       }
     },
     {
       "name": "update single unit",
       "url": {
-        "u": "/api/building/buildingId/unit/unitAddress",
+        "u": "/api/building/buildingId/unit",
         "method": "put",
         "params": ["buildingId"],
-        "query": ["unitAddress"]
+        "query": ["address"]
       }
     },
     {
       "name": "selling a unit",
       "url": {
-        "u": "/api/sell/buildingId/add/unitAddress",
+        "u": "/api/sell/buildingId/add",
         "method": "post",
         "params": ["buildingId"],
-        "query": ["unitAddress"]
+        "query": ["address"]
       }
     },
     {
       "name": "cancel selling a unit",
       "url": {
-        "u": "/api/sell/delete/buildingId/unitAddress",
+        "u": "/api/sell/delete/buildingId",
         "method": "delete",
         "params": ["buildingId"],
-        "query": ["unitAddress"]
+        "query": [""]
       }
     },
     {
       "name": "pay new invoice",
       "url": {
-        "u": "/api/sell/payment/buildingId/unitAddress",
+        "u": "/api/sell/payment/buildingId",
         "method": "put",
         "params": ["buildingId"],
-        "query": ["unitAddress"]
+        "query": ["address"]
       }
     },
     {
       "name": "show payment for a unit",
       "url": {
-        "u": "/api/sell/payment/buildingId/unitAddress",
+        "u": "/api/sell/payment/buildingId",
         "method": "get",
         "params": ["buildingId"],
-        "query": ["unitAddress"]
+        "query": ["address"]
       }
     },
     {
       "name": "download invoice for a unit",
       "url": {
-        "u": "/api/sell/download/buildingId/unitAddress",
+        "u": "/api/sell/download/buildingId",
         "method": "post",
         "params": ["buildingId"],
-        "query": ["unitAddress"]
+        "query": ["address"]
       }
     }
   ]
