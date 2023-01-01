@@ -1,4 +1,3 @@
-const validate = require("validator");
 const rolesModel = require("../model/rolesModel");
 const MyHelper = require("../utils/helper");
 
@@ -9,36 +8,49 @@ const permission = async (req, res, next) => {
     }
 
     const params = req.params;
+    const query = req.query;
+    const userData = req.user;
+    const method = req.method.toLowerCase();
 
-    let url = req.originalUrl;
-    const oringalUrl = url.split("/");
+    // check that user has Role
+    const role = await rolesModel.findOne({ _id: userData.role });
+    if (!role) throw new Error("User doesn't Have Role to access to.");
 
-    let finalUrl = oringalUrl;
+    // get all queries and put in array
+    queryList = [];
+    for (const key in query) {
+      queryList.push(key);
+    }
 
+    // get URL and remove query from it
+    let url = req.originalUrl.split("/");
+    url.forEach((element, i) => {
+      if (element.startsWith("?")) {
+        url.splice(i, 1);
+      }
+    });
+
+    // replace params in URL by its name and
+    let finalUrl = url;
     for (const key in params) {
-      oringalUrl.forEach((element, i) => {
+      url.forEach((element, i) => {
         if (element == params[key]) {
           finalUrl[i] = key;
-          //   finalUrl.push(key);
         } else {
           finalUrl[i] = element;
         }
-        // return oringalUrl;
       });
     }
     finalUrl = finalUrl.join("/");
 
-    const method = req.method.toLowerCase();
-    const userData = req.user;
-    const role = await rolesModel.findOne({ _id: userData.role });
-
-    if (!role) throw new Error("you can't access to this url");
-
+    // check that this role available in user Role
     const accessableUrl = role.urls.filter((r) => {
-      console.log(r.url.u);
-      return r.url.method == method && r.url.u == finalUrl;
+      return (
+        r.url.method == method &&
+        r.url.u == finalUrl &&
+        JSON.stringify(r.url.query) == JSON.stringify(queryList)
+      );
     });
-    console.log(userData);
     if (accessableUrl.length == 0)
       throw new Error("you can't access to this url");
     next();
