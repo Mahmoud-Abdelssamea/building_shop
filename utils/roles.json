@@ -2,6 +2,7 @@
   "roles": [
     {
       "name": "add new user",
+      "clientUrl": "employee/add",
       "url": {
         "u": "/api/user/add",
         "method": "post",
@@ -11,6 +12,7 @@
     },
     {
       "name": "delete user",
+      "clientUrl": "employee/delete",
       "url": {
         "u": "/api/user/delete/id",
         "method": "delete",
@@ -20,6 +22,7 @@
     },
     {
       "name": "update user",
+      "clientUrl": "employee/update",
       "url": {
         "u": "/api/user/update/id",
         "method": "patch",
@@ -28,25 +31,8 @@
       }
     },
     {
-      "name": "update user status",
-      "url": {
-        "u": "/api/user/update/status/id",
-        "method": "patch",
-        "params": ["id"],
-        "query": []
-      }
-    },
-    {
-      "name": "update user status",
-      "url": {
-        "u": "/api/user/login",
-        "method": "post",
-        "params": [],
-        "query": []
-      }
-    },
-    {
       "name": "add new Role",
+      "clientUrl": "getemployee",
       "url": {
         "u": "/api/role/add/employeeId",
         "method": "post",
@@ -56,6 +42,7 @@
     },
     {
       "name": "get all roles",
+      "clientUrl": "role/all",
       "url": {
         "u": "/api/role/all",
         "method": "get",
@@ -64,28 +51,10 @@
       }
     },
     {
-      "name": "get single role",
-      "url": {
-        "u": "/api/role/single/employeeId",
-        "method": "get",
-        "params": ["employeeId"],
-        "query": []
-      }
-    },
-    {
       "name": "update role",
       "url": {
         "u": "/api/role/update/employeeId",
         "method": "put",
-        "params": ["employeeId"],
-        "query": []
-      }
-    },
-    {
-      "name": "delete single role",
-      "url": {
-        "u": "/api/role/delete/employeeId",
-        "method": "delete",
         "params": ["employeeId"],
         "query": []
       }
@@ -102,6 +71,7 @@
 
     {
       "name": "add new project",
+      "clientUrl": "project/add",
       "url": {
         "u": "/api/project/add",
         "method": "post",
@@ -111,6 +81,7 @@
     },
     {
       "name": "get all projects",
+      "clientUrl": "project/all",
       "url": {
         "u": "/api/project/all",
         "method": "get",
@@ -120,6 +91,7 @@
     },
     {
       "name": "get single project",
+      "clientUrl": "project/:projectId",
       "url": {
         "u": "/api/role/single/projectId",
         "method": "get",
@@ -129,6 +101,7 @@
     },
     {
       "name": "update project",
+      "clientUrl": "project/update/:projectId",
       "url": {
         "u": "/api/project/update/projectId",
         "method": "put",
@@ -138,6 +111,7 @@
     },
     {
       "name": "delete single project",
+      "clientUrl": "project/delete/:projectId",
       "url": {
         "u": "/api/project/delete/projectId",
         "method": "delete",
@@ -147,6 +121,7 @@
     },
     {
       "name": "add new building",
+      "clientUrl": "project/:projectId/builds/add",
       "url": {
         "u": "/api/building/projectId/add",
         "method": "post",
@@ -156,6 +131,7 @@
     },
     {
       "name": "get all buildings",
+      "clientUrl": "project/:projectId/builds/all",
       "url": {
         "u": "/api/building/all",
         "method": "get",
@@ -165,6 +141,7 @@
     },
     {
       "name": "get single building",
+      "clientUrl": "project/:projectId/builds/:buildId",
       "url": {
         "u": "/api/building/single/buildingId",
         "method": "get",
@@ -174,6 +151,7 @@
     },
     {
       "name": "update building",
+      "clientUrl": "project/:projectId/builds/update/:buildId",
       "url": {
         "u": "/api/building/update/buildingId",
         "method": "put",
@@ -183,6 +161,7 @@
     },
     {
       "name": "delete single building",
+      "clientUrl": "project/:projectId/builds/delete/:buildId",
       "url": {
         "u": "/api/building/delete/buildingId",
         "method": "delete",
@@ -192,6 +171,7 @@
     },
     {
       "name": "get single unit",
+      "clientUrl": "project/:projectId/builds/:buildId/unit",
       "url": {
         "u": "/api/building/buildingId/unit",
         "method": "get",
@@ -201,6 +181,7 @@
     },
     {
       "name": "update single unit",
+      "clientUrl": "project/:projectId/builds/:buildId/unit/update",
       "url": {
         "u": "/api/building/buildingId/unit",
         "method": "put",
@@ -210,6 +191,7 @@
     },
     {
       "name": "selling a unit",
+      "clientUrl": "project/:projectId/builds/:buildId/unit/sell",
       "url": {
         "u": "/api/sell/buildingId/add",
         "method": "post",
@@ -219,6 +201,7 @@
     },
     {
       "name": "cancel selling a unit",
+      "clientUrl": "project/:projectId/builds/:buildId/unit/sell/cell",
       "url": {
         "u": "/api/sell/delete/buildingId",
         "method": "delete",
@@ -228,6 +211,7 @@
     },
     {
       "name": "pay new invoice",
+      "clientUrl": "project/:projectId/builds/:buildId/unit/payment",
       "url": {
         "u": "/api/sell/payment/buildingId",
         "method": "put",

@@ -3,7 +3,7 @@ const MyHelper = require("../utils/helper");
 
 const permission = async (req, res, next) => {
   try {
-    if (req.user.typeOfUser == "super admin") {
+    if (req.user.typeOfUser == "admin") {
       return next();
     }
 
@@ -15,7 +15,6 @@ const permission = async (req, res, next) => {
     // check that user has Role
     const role = await rolesModel.findOne({ _id: userData.role });
     if (!role) throw new Error("User doesn't Have Role to access to.");
-
     // get all queries and put in array
     queryList = [];
     for (const key in query) {
@@ -44,15 +43,17 @@ const permission = async (req, res, next) => {
     finalUrl = finalUrl.join("/");
 
     // check that this role available in user Role
-    const accessableUrl = role.urls.filter((r) => {
+    const accessableUrl = role.roles.filter((r) => {
       return (
         r.url.method == method &&
         r.url.u == finalUrl &&
         JSON.stringify(r.url.query) == JSON.stringify(queryList)
       );
     });
+
     if (accessableUrl.length == 0)
-      throw new Error("you can't access to this url");
+      throw new Error("you are not allowed to do this function");
+    console.log(" permission done");
     next();
   } catch (error) {
     MyHelper.resHelper(res, 500, false, error, error.message);

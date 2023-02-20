@@ -25,7 +25,6 @@ const userSchema = mongoose.Schema(
     },
     role: {
       type: mongoose.Schema.Types.ObjectId,
-      // default: "",
     },
     email: {
       type: String,
@@ -49,11 +48,6 @@ const userSchema = mongoose.Schema(
       minLength: 5,
       required: true,
     },
-    tokens: [
-      {
-        token: { type: String },
-      },
-    ],
   },
   {
     timestamps: true,

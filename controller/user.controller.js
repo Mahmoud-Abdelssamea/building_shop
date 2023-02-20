@@ -1,3 +1,4 @@
+const validator = require("validator");
 const userModel = require("../model/userModel");
 const MyHelper = require("../utils/helper");
 const Crypt = require("../utils/passwordCrypt");
@@ -7,21 +8,36 @@ class User {
   // create new user
   static addNewUser = async (req, res) => {
     try {
+      // get data
+      let { fName, lName, email } = req.body;
+      const typeOfUser = "employee";
+      const thePassword = req.body.password;
+
+      if ((!fName, !lName, !email, !thePassword))
+        throw new Error("please fill all required fields");
+
+      // check if user already exists
+      const userData = await userModel.findOne({ email });
+      if (userData) {
+        throw new Error("User already exists");
+      }
+
       // encrypt password
-      const { password } = req.body;
-      const hashedPassword = Crypt.encrypt(password);
+      const hashedPassword = Crypt.encrypt(thePassword);
 
       // add new user to database
-      const data = { ...req.body, password: hashedPassword };
+      const data = {
+        fName,
+        lName,
+        email,
+        typeOfUser,
+        password: hashedPassword,
+      };
       const newUser = await userModel.create(data);
+      const { password, ...user } = newUser._doc;
+
       if (!newUser) throw new Error("can not create new user");
-      MyHelper.resHelper(
-        res,
-        201,
-        true,
-        newUser,
-        "mew User added successfully"
-      );
+      MyHelper.resHelper(res, 201, true, user, "new User added successfully");
     } catch (error) {
       if (error.code == 11000) {
         error["message"] =
@@ -113,32 +129,97 @@ class User {
   static login = async (req, res) => {
     try {
       // get the data by email
-      const { email, password } = req.body;
+      const thePassword = req.body.password;
+      const email = req.body.email;
+
       const userData = await userModel.findOne({ email });
       if (!userData) throw new Error("this email not available");
 
       // check password is correct
       const validatePassword = Crypt.compareHashedPassword(
         userData.password,
-        password
+        thePassword
       );
       if (!validatePassword) throw new Error("invalid password");
 
       // create token for User send the data as a response
       const token = Token.newToken({ _id: userData._id });
-      userData.tokens = userData.tokens.concat({ token });
+
+      // remove password from data sent to user
+      const { password, ...user } = userData._doc;
 
       MyHelper.resHelper(
         res,
         200,
         true,
-        { user: userData, token },
-        "user added successfully"
+        { user, token },
+        "user loggedin successfully"
       );
     } catch (error) {
       MyHelper.resHelper(res, 500, false, error, error.message);
     }
   };
+
+  // Delete a user by their email address
+  static async getUser(req, res) {
+    try {
+      // get the data by email
+      const { email } = req.body;
+      // check if this user is already Available
+
+      const userData = await userModel.findOne({ email });
+
+      if (!userData) throw new Error("this email not available");
+
+      const { _id, ...others } = userData._doc;
+
+      MyHelper.resHelper(res, 200, true, _id, "Got Employee Id Successfully");
+    } catch (error) {
+      console.log(error.message);
+      MyHelper.resHelper(res, 500, false, error, error.message);
+    }
+  }
+  // Get all Email addresses
+  static async getAllEmails(req, res) {
+    try {
+      const userData = await userModel.find();
+      if (!userData) throw new Error("there is no Employee");
+
+      // const [{ emails, ...others }] = userData;
+      // console.log({ userData }, { emails });
+
+      const emails = userData.map((user) => {
+        return user.email;
+      });
+      MyHelper.resHelper(
+        res,
+        200,
+        true,
+        emails,
+        "Got Employee Id Successfully"
+      );
+    } catch (error) {
+      MyHelper.resHelper(res, 500, false, error, error.message);
+    }
+  }
+
+  // Get Employee Details by Id
+  static async getEmployee(req, res) {
+    try {
+      const { employeeId } = req.params;
+
+      if (!validator.isMongoId(employeeId))
+        throw new Error("Invalid employee id");
+
+      let userData = await userModel.findById({ _id: employeeId });
+
+      const { password, ...user } = userData._doc;
+
+      MyHelper.resHelper(res, 200, true, user, "Got Employee");
+    } catch (error) {
+      MyHelper.resHelper(res, 500, false, error, error.message);
+    }
+  }
 }
 
 module.exports = User;

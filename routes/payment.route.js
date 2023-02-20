@@ -5,25 +5,40 @@ const Payment = require("../controller/payment.controller");
 const auth = require("../middleware/auth.middleware");
 const permission = require("../middleware/permission.middleware");
 
-// create new user
-router.post("/:buildingId/add", auth, permission, Payment.sellSingleUnit);
+// Selling a Single Unit
+router.post(
+  "/:buildingId/add/:unitId",
+  auth,
+  permission,
+  Payment.sellSingleUnit
+);
 
 router.delete(
-  "/delete/:buildingId",
+  "/delete/:buildingId/:unitId",
   auth,
   permission,
   Payment.cancelSellingUnit
 );
 
 router.get(
-  "/payment/:buildingId",
+  "/payment/:buildingId/:unitId",
   auth,
   permission,
   Payment.getPaymentForSingleUnit
 );
 
-router.put("/payment/:buildingId", auth, permission, Payment.payNewInvoice);
+router.get(
+  "/payment/newInvoice/:buildingId/:unitId",
+  auth,
+  permission,
+  Payment.payNewInvoice
+);
 
-router.post("/download/:buildingId", auth, permission, Payment.downloadInvoice);
+router.get(
+  "/download/:buildingId/:unitId/:invoice",
+  auth,
+  permission,
+  Payment.downloadInvoice
+);
 
 module.exports = router;

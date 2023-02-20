@@ -12,11 +12,11 @@ class Building {
   static createNewBuilding = async (req, res) => {
     try {
       // get data from body
-      const { buildingNum, noFloors } = req.body;
+      const { buildingNum, noFloors, images } = req.body;
       const { projectId } = req.params;
 
       // check data is valid
-      if (!buildingNum || !noFloors)
+      if (!buildingNum || !noFloors || !images)
         throw new Error("please fill all required data ");
 
       if (!validator.isMongoId(projectId))
@@ -35,6 +35,7 @@ class Building {
       //   add new building to database
       const newBuilding = await buildingModel.create({
         buildingNum,
+        images,
         projectId,
         noFloors,
         units,
@@ -178,8 +179,7 @@ class Building {
   //
   static getSingleUnit = async (req, res) => {
     try {
-      const { buildingId } = req.params;
-      const unitAddress = req.query.address;
+      const { buildingId, unitId } = req.params;
 
       if (!validator.isMongoId(buildingId))
         throw new Error("buildingId not correct");
@@ -189,7 +189,7 @@ class Building {
 
       if (!building) throw new Error("this building not available");
       const singleUnit = building.units.filter((element) => {
-        return element.unitAddress == unitAddress;
+        return element._id == unitId;
       });
 
       if (singleUnit.length == 0)
@@ -205,22 +205,27 @@ class Building {
   //
   static updateSingleUnit = async (req, res) => {
     try {
-      const { buildingId } = req.params;
-      const unitAddress = req.query.address;
+      const { buildingId, unitId } = req.params;
       const { price, status } = req.body;
 
       //   update price in case it's available
       price &&
         (await buildingModel.updateOne(
-          { _id: buildingId, "units.unitAddress": unitAddress },
+          { _id: buildingId, "units._id": unitId },
           { $set: { "units.$.price": price } }
         ));
 
       //   update status in case it's available
       status &&
         (await buildingModel.updateOne(
-          { _id: buildingId, "units.unitAddress": unitAddress },
+          { _id: buildingId, "units._id": unitId },
           { $set: { "units.$.status": status } }
+        ));
+
+      image &&
+        (await buildingModel.updateOne(
+          { _id: buildingId, "units._id": unitId },
+          { $set: { "units.$.image": image } }
         ));
 
       // send  updated unit to user

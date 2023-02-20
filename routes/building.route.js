@@ -11,7 +11,12 @@ router.get("/single/:buildingId", auth, permission, Building.getSingleBuilding);
 router.put("/update/:buildingId", auth, permission, Building.updateBuilding);
 router.delete("/delete/:buildingId", auth, permission, Building.deleteBuilding);
 
-router.get("/:buildingId/unit", auth, permission, Building.getSingleUnit);
+router.get(
+  "/:buildingId/unit/:unitId",
+  auth,
+  permission,
+  Building.getSingleUnit
+);
 router.put("/:buildingId/unit", auth, permission, Building.updateSingleUnit);
 
 module.exports = router;

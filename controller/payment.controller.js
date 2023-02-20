@@ -12,9 +12,10 @@ class Payment {
 
   static sellSingleUnit = async (req, res) => {
     try {
-      const { buildingId } = req.params;
-      const unitAddress = req.query.address;
-      let { customer, employee, paymentMthd, noOfYears } = req.body;
+      const { buildingId, unitId } = req.params;
+      let { customer, paymentMthd, noOfYears } = req.body;
+      const user = req.user;
+      const employee = user.fName + " " + user.lName;
 
       if (paymentMthd == "cash") noOfYears = 0;
 
@@ -28,7 +29,7 @@ class Payment {
       if (!building) throw new Error("this building not available");
 
       const unit = building.units.filter((ele) => {
-        return ele.unitAddress == unitAddress;
+        return ele._id == unitId;
       });
       if (unit.length == 0) throw new Error("this address not availble");
 
@@ -85,7 +86,7 @@ class Payment {
 
       //   add payment id to unit payment document
       await buildingModel.updateOne(
-        { _id: buildingId, "units.unitAddress": unitAddress },
+        { _id: buildingId, "units._id": unitId },
         {
           $set: { "units.$.payment": sellUnit._id, "units.$.status": "sold" },
           //   $set: { "units.$.status": "sold" },
@@ -116,18 +117,17 @@ class Payment {
 
   static cancelSellingUnit = async (req, res) => {
     try {
-      const { buildingId } = req.params;
-      const unitAddress = req.query.address;
+      const { buildingId, unitId } = req.params;
 
       const building = await buildingModel.findOne({ _id: buildingId });
 
       if (!building) throw new Error("this building not available");
 
       const unit = building.units.filter((ele) => {
-        return ele.unitAddress == unitAddress;
+        return ele._id == unitId;
       });
 
-      if (unit.length == 0) throw new Error("this address not available");
+      if (unit.length == 0) throw new Error("this Unit not available");
 
       if (!unit[0].payment) throw new Error("this unit not sold yet");
 
@@ -140,7 +140,7 @@ class Payment {
 
       //   update the unit in building by  delete payment id and change status to free
       await buildingModel.updateOne(
-        { _id: buildingId, "units.unitAddress": unitAddress },
+        { _id: buildingId, "units._id": unitId },
         {
           $set: { "units.$.payment": "", "units.$.status": "free" },
         }
@@ -157,15 +157,14 @@ class Payment {
   //
   static getPaymentForSingleUnit = async (req, res) => {
     try {
-      const { buildingId } = req.params;
-      const unitAddress = req.query.address;
+      const { buildingId, unitId } = req.params;
 
       const building = await buildingModel.findOne({ _id: buildingId });
 
       if (!building) throw new Error("this building not available");
 
       const unit = building.units.filter((ele) => {
-        return ele.unitAddress == unitAddress;
+        return ele._id == unitId;
       });
 
       if (unit.length == 0) throw new Error("this address not available");
@@ -194,15 +193,14 @@ class Payment {
   //
   static payNewInvoice = async (req, res) => {
     try {
-      const { buildingId } = req.params;
-      const unitAddress = req.query.address;
-
+      const { buildingId, unitId } = req.params;
+      const user = req.user;
       const building = await buildingModel.findOne({ _id: buildingId });
 
       if (!building) throw new Error("this building not available");
 
       const unit = building.units.filter((ele) => {
-        return ele.unitAddress == unitAddress;
+        return ele._id == unitId;
       });
 
       if (unit.length == 0) throw new Error("this address not available");
@@ -216,9 +214,6 @@ class Payment {
 
       if (!payment) throw new Error("there is no payment for this Unit");
 
-      //   console.log(payment);
-      //   console.log(payment.payment, payment["noOfPaidInvoices"]);
-
       if (payment.payment.totalInvoices == payment.payment.noOfPaidInvoices) {
         throw new Error("this Unit finshed all insallemnts");
       }
@@ -230,7 +225,6 @@ class Payment {
         unit[0].price,
         payment.payment.noOfPaidInvoices + 1
       );
-      // console.log();
 
       //   Update payment collection
       await paymentModel.findOneAndUpdate(
@@ -252,6 +246,7 @@ class Payment {
         clientAddress: "client address",
         clientCity: "client city",
         clientCountry: "client country",
+        employee: user.fNme,
         invoiceNo,
         unitNo: `${unit[0].unitName}`,
         unitAddress: `${unit[0].unitAddress}`,
@@ -293,17 +288,15 @@ class Payment {
 
   static downloadInvoice = async (req, res) => {
     try {
-      const { buildingId } = req.params;
-      const unitAddress = req.query.address;
-      const { invoice } = req.body;
+      const { buildingId, unitId, invoice } = req.params;
       const building = await buildingModel.findOne({ _id: buildingId });
       if (!building) throw new Error("this building not available");
 
       const unit = building.units.filter((ele) => {
-        return ele.unitAddress == unitAddress;
+        return ele._id == unitId;
       });
 
-      if (unit.length == 0) throw new Error("this address not available");
+      if (unit.length == 0) throw new Error("this Unit not available");
 
       if (!unit[0].payment) throw new Error("this unit not sold yet");
 
@@ -323,10 +316,8 @@ class Payment {
         throw new Error("this invoice not available");
 
       let file = path.resolve(`invoices/${requiredInvoice[0]}.pdf`);
-
-      const response = res.sendFile(file);
-
-      if (!response) throw new Error("this invoice not available in server");
+      await res.download(file);
+      // if (!response) throw new Error("this invoice not available in server");
     } catch (error) {
       MyHelper.resHelper(res, 500, false, error, error.message);
     }

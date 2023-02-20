@@ -4,17 +4,21 @@ const MyHelper = require("../utils/helper");
 
 const auth = async (req, res, next) => {
   try {
-    const token = req.header("Authorization");
+    let token = req.header("Authorization");
     if (!token) throw new Error("there is no token");
-    token.replace("Bearer ", "");
-    const decodedToken = jwt.verify(token, process.env.SECRETKEY);
+    token = token.replace("Bearer ", "");
+
+    let decodedToken;
+    jwt.verify(token, process.env.SECRETKEY, (err, decoded) => {
+      if (err) throw new Error("failed to verify token please login again");
+      if (decoded) decodedToken = decoded;
+    });
 
     if (!decodedToken) throw new Error("invalid token");
 
     // get the data
     const userData = await userModel.findOne({
       _id: decodedToken._id,
-      // "tokens.token": token,
     });
     if (!userData) throw new Error("user not available");
 

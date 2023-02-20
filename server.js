@@ -1,6 +1,7 @@
 const express = require("express");
 const { default: mongoose } = require("mongoose");
 require("dotenv").config();
+const cors = require("cors");
 const UserRouter = require("./routes/user.route");
 const RoleRouter = require("./routes/role.route");
 const ProjectRouter = require("./routes/project.route");
@@ -9,6 +10,7 @@ const SellRouter = require("./routes/payment.route");
 const app = express();
 const PORT = process.env.PORT;
 
+app.use(cors());
 app.use(express.json());
 mongoose.set("strictQuery", true);
 

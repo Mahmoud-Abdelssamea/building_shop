@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 
 const roleSchema = mongoose.Schema({
-  urls: [
+  roles: [
     {
+      name: String,
+      clientUrl: String,
       url: {
         u: {},
         method: {},

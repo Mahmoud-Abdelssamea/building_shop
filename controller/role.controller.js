@@ -9,30 +9,20 @@ class Role {
   //
   static createNewRole = async (req, res) => {
     try {
-      const links = req.body;
+      const roles = req.body;
       const { employeeId } = req.params;
 
       const checkUserHasRole = await userModel.findOne({ _id: employeeId });
 
+      console.log(checkUserHasRole);
       if (!checkUserHasRole) throw new Error("this employee not available");
 
-      if (checkUserHasRole.role)
+      if (checkUserHasRole.role) {
         throw new Error("this user already has role you can't create new one ");
+      }
 
-      const data = links.map((element) => {
-        return {
-          url: {
-            u: element.u,
-            method: element.method,
-            params: element.params || [],
-            query: element.query || [],
-          },
-        };
-      });
       //   creat newe role
-      const newRole = await roleModel.create({
-        urls: data,
-      });
+      const newRole = await roleModel.create({ roles });
       if (!newRole) throw new Error("failed to create new Role");
 
       //   add role Id to user

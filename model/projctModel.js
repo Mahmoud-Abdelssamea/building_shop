@@ -14,6 +14,7 @@ const ProjectSchema = mongoose.Schema(
       required: [true, "please add project location required"],
       trim: true,
     },
+    images: { type: [String] },
     buildingsList: {
       type: [mongoose.Schema.Types.ObjectId],
       default: [],

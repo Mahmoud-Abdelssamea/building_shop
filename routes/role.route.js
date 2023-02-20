@@ -8,7 +8,7 @@ const permission = require("../middleware/permission.middleware");
 // create new user
 router.post("/add/:employeeId", auth, permission, Role.createNewRole);
 router.get("/all", auth, permission, Role.getAllRoles);
-router.get("/single/:employeeId/", auth, permission, Role.getSingleRole);
+router.get("/single/:employeeId/", auth, Role.getSingleRole);
 router.put("/update/:employeeId", auth, permission, Role.updateRole);
 router.delete("/delete/:employeeId", auth, permission, Role.deleteRole);
 // router.delete("/delete", auth, permission, Role.deleteAllRoles);
